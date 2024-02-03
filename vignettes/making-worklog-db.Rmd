@@ -1,0 +1,52 @@
+---
+title: "making-worklog-db"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{making-worklog-db}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(worklog)
+```
+
+Create the work log DB
+
+```{r}
+tmp_file <- tempfile(fileext = ".db")
+create_worklog(tmp_file)
+```
+
+# Add information
+
+```{r}
+  add_contact(
+    title = "Dr",
+    firstname = "Robin",
+    surname = "Smit",
+    fullname = "Robin Smit",
+    other_info = list(
+      nickname = "Robin",
+      notes = "Working with for a long time"
+    ),
+    db = "test.db"
+  )
+  add_client(
+    name = "TER",
+    short_name = "TER",
+    long_name = "Transport Emission Research",
+    other_info = list(
+      notes = "Robin's company"
+    ),
+    db = "test.db"
+  )
+```
+
