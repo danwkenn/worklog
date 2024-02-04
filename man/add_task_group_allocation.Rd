@@ -4,12 +4,14 @@
 \alias{add_task_group_allocation}
 \title{Add a task to the addresses table.}
 \usage{
-add_task_group_allocation(task_id, task_group_id, db = NULL)
+add_task_group_allocation(task_id, task_group_id, order_value, db = NULL)
 }
 \arguments{
 \item{task_id}{Task ID}
 
 \item{task_group_id}{Group ID.}
+
+\item{order_value}{Value to order tasks by}
 
 \item{db}{Database file.}
 }

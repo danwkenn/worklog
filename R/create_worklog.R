@@ -95,7 +95,8 @@ DBI::dbExecute(con, "
   CREATE TABLE task_group_allocation (
     id INTEGER PRIMARY KEY,
     task_id INTEGER,
-    task_group_id TEXT
+    task_group_id TEXT,
+    order_value REAL
   )
 ")
 
@@ -108,6 +109,26 @@ DBI::dbExecute(con, "
     rate_period TEXT,
     rate_value REAL,
     currency TEXT
+  )
+")
+
+# Invoices table
+DBI::dbExecute(con, "
+  CREATE TABLE invoices (
+    id INTEGER PRIMARY KEY,
+    issue_date TEXT,
+    due_period_unit TEXT,
+    due_period_value REAL,
+    other_info TEXT
+  )
+")
+
+# Invoice_task_group allocation table
+DBI::dbExecute(con, "
+  CREATE TABLE invoice_task_group_allocations(
+    id INTEGER PRIMARY KEY,
+    invoice_id INTEGER,
+    task_group_id INTEGER
   )
 ")
 

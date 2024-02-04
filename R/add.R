@@ -299,6 +299,8 @@ add_project <- function(
 
   # Get ID:
   id <- get_unique_id(db, "projects")
+  other_info <- convert_other_info(other_info)
+
   # Insert data into the projects table
   new_row <- data.frame(
     id = id,
@@ -421,11 +423,13 @@ description = description
 #' Add a task to the addresses table.
 #' @param task_id Task ID
 #' @param task_group_id Group ID.
+#' @param order_value Value to order tasks by
 #' @param db Database file.
 #' @export
 add_task_group_allocation <- function(
   task_id,
   task_group_id,
+  order_value,
   db = NULL
 ) {
 
@@ -450,6 +454,101 @@ add_task_group_allocation <- function(
   DBI::dbWriteTable(
     db,
     "task_group_allocations",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("task_group_allocation added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+#' Add a task to the addresses table.
+#' @param issue_date Date to issue.
+#' @param due_period_unit Period unit to use.
+#' @param due_period_value Period length
+#' @param sent Sent?
+#' @param paid Paid?
+#' @param other_info Other info to add
+#' @param db Database file.
+#' @export
+add_invoice <- function(
+  issue_date,
+  due_period_unit,
+  due_period_value,
+  sent,
+  paid,
+  other_info,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "task_group_allocations")
+  other_info <- convert_other_info(other_info)
+
+
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+    issue_date = issue_date,
+    due_period_unit = due_period_unit,
+    due_period_value = due_period_value,
+    sent = sent,
+    paid = paid,
+    other_info = other_info
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "task_group_allocations",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("task_group_allocation added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+#' Add a task group to the invoice allocation table.
+#' @param invoice_id Invoice ID.
+#' @param task_group_id Task Group ID.
+#' @param db Database file.
+#' @export
+add_invoice_task_group_allocation <- function(
+  invoice_id,
+  task_group_id,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "invoice_task_group_allocations")
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+    invoice_id = invoice_id,
+    task_group_id = task_group_id,
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "invoice_task_group_allocation",
     new_row,
     append = TRUE,
     row.names = FALSE)
