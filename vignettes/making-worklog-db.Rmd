@@ -37,7 +37,7 @@ create_worklog(tmp_file)
       nickname = "Robin",
       notes = "Working with for a long time"
     ),
-    db = "test.db"
+    db = tmp_file
   )
   add_client(
     name = "TER",
@@ -46,7 +46,23 @@ create_worklog(tmp_file)
     other_info = list(
       notes = "Robin's company"
     ),
-    db = "test.db"
+    db = tmp_file
   )
+  add_position(
+    client_id = 1,
+    contact_id = 1,
+    name = "Director",
+    start_date = Sys.Date(),
+    end_date = Sys.Date(),
+    db = tmp_file
+  )
+  add_address(
+    contact_id = 1,
+    position_id = 1,
+    type = "email",
+    value = "fake@fakemails.com",
+    db = tmp_file
+  )
+
 ```
 

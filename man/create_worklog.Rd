@@ -4,7 +4,10 @@
 \alias{create_worklog}
 \title{Create a worklog database for storing work information.}
 \usage{
-create_worklog(path)
+create_worklog(path = "worklog.db")
+}
+\arguments{
+\item{path}{Path to create db}
 }
 \description{
 Create a worklog database for storing work information.

@@ -1,4 +1,5 @@
 #' Internal function for DB.
+#' @param db data-base
 get_db <- function(db) {
   if (is.null(db)) {
     db <- Sys.getenv("WORKLOG_DB_PATH")
@@ -11,6 +12,8 @@ get_db <- function(db) {
 }
 
 #' Internal function for new ID creation
+#' @param db data-base
+#' @param table table to create ID for
 get_unique_id <- function(db, table) {
   query <- paste(
     "SELECT COUNT(*) AS N FROM",
@@ -20,10 +23,20 @@ get_unique_id <- function(db, table) {
   id
 }
 
+#' Convert other info into character form
+#' @param other_info List to convert to JSON
 convert_other_info <- function(other_info) {
   jsonlite::toJSON(other_info)
 }
 
+#' Add a contact to the contacts table.
+#' @param title Title (Mr/Ms) of contact
+#' @param firstname First name
+#' @param surname Last name/surname
+#' @param fullname Full name including title, firstname, surname
+#' @param other_info Other information.
+#' @param db Database file.
+#' @export
 add_contact <- function(
   title,
   firstname,
@@ -65,7 +78,13 @@ add_contact <- function(
   invisible(TRUE)
 }
 
-
+#' Add a client to the clients table.
+#' @param name Name of the client
+#' @param short_name Short name of client
+#' @param long_name Long name of client
+#' @param other_info Other information.
+#' @param db Database file.
+#' @export
 add_client <- function(
   name,
   short_name,
@@ -105,10 +124,19 @@ add_client <- function(
   invisible(TRUE)
 }
 
+#' Add a position to the positions table.
+#' @param contact_id Id of contact
+#' @param client_id id of client
+#' @param name name of the position.
+#' @param other_info Other information.
+#' @param db Database file.
+#' @export
 add_position <- function(
   contact_id,
   client_id,
   name,
+  start_date = NA_character_,
+  end_date = NA_character_,
   other_info = NULL,
   db = NULL
 ) {
@@ -125,12 +153,15 @@ add_position <- function(
   # Get ID:
   id <- get_unique_id(db, "positions")
   other_info <- convert_other_info(other_info)
+
   # Insert data into the contacts table
   new_position <- data.frame(
     id = id,
     contact_id = contact_id,
     client_id = client_id,
     name = name,
+    start_date = as.character(start_date),
+    end_date = as.character(end_date),
     other_info = as.character(other_info))
 
   DBI::dbWriteTable(
@@ -144,6 +175,13 @@ add_position <- function(
   invisible(TRUE)
 }
 
+#' Add a address to the addresses table.
+#' @param contact_id Id of contact
+#' @param position_id id of client
+#' @param type name of the address type.
+#' @param value value of address.
+#' @param db Database file.
+#' @export
 add_address <- function(
   contact_id,
   position_id,
@@ -163,14 +201,13 @@ add_address <- function(
 
   # Get ID:
   id <- get_unique_id(db, "addresses")
-  other_info <- convert_other_info(other_info)
   # Insert data into the contacts table
   new_address <- data.frame(
     id = id,
     contact_id = contact_id,
     position_id = position_id,
     type = type,
-    address = address)
+    value = value)
 
   DBI::dbWriteTable(
     db,

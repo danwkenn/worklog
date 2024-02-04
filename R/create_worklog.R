@@ -2,7 +2,7 @@
 #' @param path Path to create db
 #' @export
 create_worklog <- function(path = "worklog.db") {
-  
+
 # Create SQLite database
 db_path <- path
 con <- DBI::dbConnect(
@@ -26,7 +26,7 @@ DBI::dbExecute(con, "
   CREATE TABLE clients (
     id INTEGER PRIMARY KEY,
     name TEXT,
-    shortname TEXT,
+    short_name TEXT,
     long_name TEXT,
     other_info TEXT
   )
@@ -39,6 +39,8 @@ DBI::dbExecute(con, "
     contact_id INTEGER,
     client_id INTEGER,
     name TEXT,
+    start_date TEXT,
+    end_date TEXT,
     other_info TEXT
   )
 ")
@@ -62,6 +64,9 @@ invisible(TRUE)
 }
 
 function() {
+  unlink("test.db")
   create_worklog("test.db")
-  db <- "test.db"
+  path <- "test.db"
+  db <- get_db(path)
+  DBI::dbListTables(db)
 }
