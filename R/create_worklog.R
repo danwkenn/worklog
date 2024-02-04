@@ -56,6 +56,61 @@ DBI::dbExecute(con, "
   )
 ")
 
+# Create projects table
+DBI::dbExecute(con, "
+  CREATE TABLE projects (
+    id INTEGER PRIMARY KEY,
+    client_id INTEGER,
+    name TEXT,
+    description TEXT,
+    billing_scheme_id INTEGER,
+    other_info TEXT
+  )
+")
+
+# Create tasks table
+DBI::dbExecute(con, "
+  CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY,
+    project_id INTEGER,
+    name TEXT,
+    description TEXT,
+    completion_time NUMERIC,
+    status TEXT
+  )
+")
+
+# Create task_groups table
+DBI::dbExecute(con, "
+  CREATE TABLE task_groups (
+    id INTEGER PRIMARY KEY,
+    project_id INTEGER,
+    name TEXT,
+    description TEXT
+  )
+")
+
+# Create tasks table
+DBI::dbExecute(con, "
+  CREATE TABLE task_group_allocation (
+    id INTEGER PRIMARY KEY,
+    task_id INTEGER,
+    task_group_id TEXT
+  )
+")
+
+# Billing Scheme table
+DBI::dbExecute(con, "
+  CREATE TABLE billing_scheme (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    description TEXT,
+    rate_period TEXT,
+    rate_value REAL,
+    currency TEXT
+  )
+")
+
 message("Worklog created at `", path, "`")
 # Close the database connection
 DBI::dbDisconnect(con)

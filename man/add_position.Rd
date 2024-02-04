@@ -21,6 +21,10 @@ add_position(
 
 \item{name}{name of the position.}
 
+\item{start_date}{Initial date of the position}
+
+\item{end_date}{End date of the position}
+
 \item{other_info}{Other information.}
 
 \item{db}{Database file.}

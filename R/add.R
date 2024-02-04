@@ -128,6 +128,8 @@ add_client <- function(
 #' @param contact_id Id of contact
 #' @param client_id id of client
 #' @param name name of the position.
+#' @param start_date Initial date of the position
+#' @param end_date End date of the position
 #' @param other_info Other information.
 #' @param db Database file.
 #' @export
@@ -217,5 +219,241 @@ add_address <- function(
     row.names = FALSE)
 
   message("address added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+
+#' Add a address to the addresses table.
+#' @param name Name of the scheme
+#' @param description Description
+#' @param rate_period unit where rate is applied
+#' @param rate_value  bill per unit
+#' @param currency currency billing is in.
+#' @param db Database file.
+#' @export
+add_billing_scheme <- function(
+  name,
+  description,
+  rate_period,
+  rate_value,
+  currency,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "billing_schemes")
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+    name = name,
+    description = description,
+    rate_period = rate_period,
+    rate_value = rate_value,
+    currency = currency)
+
+  DBI::dbWriteTable(
+    db,
+    "billing_schemes",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("billing scheme added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+#' Add a project to the projects table.
+#' @param client_id Client ID
+#' @param name Name of project
+#' @param description Description of project
+#' @param billing_scheme_id ID for billing scheme.
+#' @param other_info Other info about projects.
+#' @param db Database file.
+#' @export
+add_project <- function(
+  client_id,
+  name,
+  description,
+  billing_scheme_id,
+  other_info,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "projects")
+  # Insert data into the projects table
+  new_row <- data.frame(
+    id = id,
+  client_id = client_id,
+  name = name,
+  description = description,
+  billing_scheme_id = billing_scheme_id,
+  other_info = other_info
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "projects",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("projects added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+
+
+#' Add a task to the tasks table.
+#' @param project_id Project ID
+#' @param name Name of task
+#' @param description Description of task
+#' @param completion_time time taken to complete
+#' @param status Not Started, In progress, Finished
+#' @param db Database file.
+#' @export
+add_task <- function(
+  project_id,
+  name,
+  description,
+  completion_time,
+  status,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "tasks")
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+project_id = project_id,
+name = name,
+description = description,
+completion_time = completion_time,
+status = status
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "tasks",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("tasks added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+
+
+#' Add a task to the task_groups table.
+#' @param project_id Project ID
+#' @param name Name of task group
+#' @param description Description of task group
+#' @param db Database file.
+#' @export
+add_task_group <- function(
+  project_id,
+  name,
+  description,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "task_groups")
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+project_id = project_id,
+name = name,
+description = description
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "task_groups",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("task_group added successfully with id `", id, "`")
+  invisible(TRUE)
+}
+
+
+
+#' Add a task to the addresses table.
+#' @param task_id Task ID
+#' @param task_group_id Group ID.
+#' @param db Database file.
+#' @export
+add_task_group_allocation <- function(
+  task_id,
+  task_group_id,
+  db = NULL
+) {
+
+  if (is.null(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+  if (is.character(db)) {
+    on.exit(DBI::dbDisconnect(db))
+  }
+
+  db <- get_db(db)
+
+  # Get ID:
+  id <- get_unique_id(db, "task_group_allocations")
+  # Insert data into the contacts table
+  new_row <- data.frame(
+    id = id,
+    task_id = task_id,
+    task_group_id = task_group_id,
+   )
+
+  DBI::dbWriteTable(
+    db,
+    "task_group_allocations",
+    new_row,
+    append = TRUE,
+    row.names = FALSE)
+
+  message("task_group_allocation added successfully with id `", id, "`")
   invisible(TRUE)
 }
