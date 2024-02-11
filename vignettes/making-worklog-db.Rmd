@@ -63,6 +63,15 @@ create_worklog(tmp_file)
     value = "fake@fakemails.com",
     db = tmp_file
   )
+```
 
+# Write out to Excel:
+
+```{r}
+tmp_xlsx_file <- tempfile(fileext = ".xlsx")
+create_xlsx_from_db(
+  path = tmp_xlsx_file,
+  db = tmp_file
+)
 ```
 

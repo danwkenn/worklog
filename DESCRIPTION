@@ -16,4 +16,5 @@ VignetteBuilder: knitr
 Imports: 
     DBI,
     jsonlite,
+    openxlsx,
     RSQLite
